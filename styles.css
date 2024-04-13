@@ -14,14 +14,13 @@ body {
     font-size: 48px;
     font-weight: 900;
     text-align: center;
-    padding: 20px;
+    margin-top: 20px;
 }
 
 .footer {
     font-size: 24px;
     font-weight: 900;
     text-align: center;
-    padding: 20px;
 }
 
 .board {
@@ -31,11 +30,30 @@ body {
     grid-template-rows: 200px 200px 200px;
 }
 
-.board div {
+.square {
+    color:black;
     border: solid 2px black;
     font-size: 120px;
     font-weight: bold;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.square.x {
+    color:green;
+}
+
+.square.o {
+    color:crimson;
+}
+
+.square.x.winsq{
+    color: white;
+    background-color: green;
+}
+
+.square.o.winsq{
+    color: white;
+    background-color: crimson;
 }
