@@ -1,9 +1,14 @@
+@font-face {
+    font-family: "Comfortaa-Bold";
+    src: url(fonts/Comfortaa-Bold.ttf);
+}
+
 body {
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: "Comfortaa-Bold", sans-serif;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 50px;
+    gap: 20px;
+    background-color: slategray;
 }
 
 * {
@@ -12,28 +17,65 @@ body {
 
 .header {
     font-size: 48px;
-    font-weight: 900;
+    font-weight: bold;
     text-align: center;
     margin-top: 20px;
+    color: antiquewhite;
+}
+
+.namebar {
+    display: flex;
+    justify-content: space-around;
+    font-weight: bold;
+    font-size: 24px;
+    height: 50px;
+}
+
+.namebar div {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+input {
+    width: 200px;
+    font-size: 18px;
+    border: none;
+    background-color: antiquewhite;
+    border-radius: 10px;
+    padding: 5px 10px;
+    font-family: "Comfortaa-Bold", sans-serif;
+}
+
+.left input:focus {
+    outline: none;
+    border: 4px solid green;
+}
+
+.right input:focus {
+    outline: none;
+    border: 4px solid red;
 }
 
 .footer {
     font-size: 24px;
-    font-weight: 900;
+    font-weight: bold;
     text-align: center;
 }
 
 .board {
     display: grid;
     border: solid 5px black;
-    grid-template-columns: 200px 200px 200px;
-    grid-template-rows: 200px 200px 200px;
+    grid-template-columns: 180px 180px 180px;
+    grid-template-rows: 180px 180px 180px;
+    align-self: center;
+    background-color: antiquewhite;
 }
 
 .square {
     color:black;
     border: solid 2px black;
-    font-size: 120px;
+    font-size: 100px;
     font-weight: bold;
     display: flex;
     align-items: center;
@@ -49,11 +91,42 @@ body {
 }
 
 .square.x.winsq{
-    color: white;
+    color: antiquewhite;
     background-color: green;
 }
 
 .square.o.winsq{
-    color: white;
+    color: antiquewhite;
     background-color: crimson;
+}
+
+.footer p{
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    align-items: center;
+}
+
+button {
+    border: 4px solid slategray;
+    text-decoration: none;
+    font-size: 24px;
+    width: 150px;
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-weight: bold;
+    color: antiquewhite;
+    font-family: "Comfortaa-Bold", sans-serif;
+}
+
+.r1 {
+    background-color: green;
+}
+
+.r2 {
+    background-color: crimson;
+}
+
+button:hover {
+    border: 4px solid antiquewhite;
 }

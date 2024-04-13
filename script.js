@@ -88,9 +88,16 @@ const display = (function() {
 
     const squares = document.querySelectorAll('.square');
     const footer = document.querySelector('.footer');
+    const input1 = document.querySelector('#p1name');
+    const input2 = document.querySelector('#p2name');
 
     const getSquareGrids = () => squares;
     const getFooter = () => footer;
+    const getInput = (player) => {
+        if (player === 1) {
+            return input1
+        } else return input2;
+    }
 
     const addMarkColor = (markIndex, mark) => {
         squares.forEach(
@@ -124,7 +131,7 @@ const display = (function() {
         );
     }; 
 
-    return {updateBoard, getSquareGrids, getFooter, addMarkColor, addWinnerColor};
+    return {updateBoard, getSquareGrids, getFooter, addMarkColor, addWinnerColor, getInput};
 
 })();
 
@@ -147,16 +154,49 @@ function Game() {
 
                 if (gameboard.checkWinner() !== null) {
                     end();
+                } else {
+                    turnIndicator();
                 }
 
             })
         }
     );
 
-    const start = () => {
-        
+    display.getInput(1).addEventListener('input', function() {
+        changeName(player1, this);
+    })
+    display.getInput(2).addEventListener('input', function() {
+        changeName(player2, this);
+    })
+
+    function changeName(player, node) {
+        player.setName(node.value);
+        if (gameboard.checkWinner() === null) {
+            turnIndicator();
+        }
+    }
+
+    const turnIndicator = () => {
+        if (gameboard.getTurn() % 2 === 0) {
+            display.getFooter().textContent = player1.getName() + "'s turn";
+        } else {
+            display.getFooter().textContent = player2.getName() + "'s turn";
+        }
+    }
+
+    const start = (firstturn) => {
         gameboard.reset();
+        if (firstturn === 1) { gameboard.advanceTurn()}
+
+        display.getSquareGrids().forEach(
+            function(node) {
+                node.classList.remove('x');
+                node.classList.remove('o');
+                node.classList.remove('winsq');
+            }
+        );
         display.updateBoard(gameboard);
+        turnIndicator();
     }
 
     const end = () => {
@@ -169,7 +209,28 @@ function Game() {
             } else {
                 display.getFooter().textContent = player2.getName() + " wins!";
             }
-        }       
+        }
+        showRestart();    
+    }
+
+    const showRestart = () => {
+        const restartdiv = document.createElement('p');
+        restartdiv.textContent = "REPLAY?"
+        const restart1 = document.createElement('button');
+        const restart2 = document.createElement('button');
+        restart1.textContent = "X Start";
+        restart1.classList.add("r1");
+        restart2.textContent = "O Start";
+        restart2.classList.add("r2");
+        restart1.addEventListener('click', function() {
+            start(0);
+        });
+        restart2.addEventListener('click', function() {
+            start(1);
+        });
+        restartdiv.appendChild(restart1);
+        restartdiv.appendChild(restart2);
+        display.getFooter().appendChild(restartdiv);
     }
 
     return {start};
@@ -177,4 +238,4 @@ function Game() {
 }
 
 const game = Game();
-game.start();
+game.start(0);
