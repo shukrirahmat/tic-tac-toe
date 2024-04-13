@@ -3,11 +3,6 @@ function Gameboard() {
     let board = [];
     let turn = 0;
 
-    const reset = () => {
-        board = [" ", " ", " ", " ", " ", " ", " ", " ", " "];
-        turn = 0;
-    };
-
     const getBoard = () => board;
 
     const getSquare = (index) => board[index];
@@ -17,8 +12,16 @@ function Gameboard() {
     }
 
     const getTurn = () => turn;
+
     const advanceTurn = () => turn++;
 
+    /* Reset board to it's inital empty form, and return back to initial turn */
+    const reset = () => {
+        board = [" ", " ", " ", " ", " ", " ", " ", " ", " "];
+        turn = 0;
+    };
+
+    /* Check if any mark lined up to make a win, and colors it */
     const checkWin = (mark) => {
         if (board[0] === mark && board[1] === mark && board[2] === mark) {
             display.addWinnerColor([0, 1, 2]);
@@ -49,6 +52,7 @@ function Gameboard() {
         }
     }
 
+    /* Check if any of two marks line ups to make a win, return draw if board are full */
     const checkWinner = () => {
         if (checkWin("X")) {
             return "X";
@@ -66,6 +70,16 @@ function Gameboard() {
 
 function Player(name, mark) {
 
+    const getMark = () => mark;
+    const getName = () => name;
+    const setName = (newName) => {
+        name = newName;
+    } 
+
+    /*
+    Adds player's mark on chosen square index, and update the display
+    Only happens when the square is 'empty'
+    */
     const chooseSquare = (board, index) => {
         if (board.getSquare(index) === " ") {
             board.setSquare(index, mark);
@@ -74,12 +88,6 @@ function Player(name, mark) {
             board.advanceTurn();
         } 
     }
-
-    const getMark = () => mark;
-    const getName = () => name;
-    const setName = (newName) => {
-        name = newName;
-    } 
 
     return {getName, setName, getMark, chooseSquare};
 }
@@ -99,6 +107,7 @@ const display = (function() {
         } else return input2;
     }
 
+    /* adds color class to the mark */
     const addMarkColor = (markIndex, mark) => {
         squares.forEach(
             function(node, index) {
@@ -113,6 +122,7 @@ const display = (function() {
         );
     }
 
+    /* adds color class to the square that form winning line  */
     const addWinnerColor = (line) => {
         squares.forEach(
             function(node,index) {
@@ -123,6 +133,7 @@ const display = (function() {
         )
     }
 
+    /* updates the display of the board */
     const updateBoard = (board) => {
         squares.forEach(
             function(node, index) {
@@ -137,10 +148,18 @@ const display = (function() {
 
 function Game() {
 
+    /* create the key objects */
     const gameboard = Gameboard();
     const player1 = Player("Player 1", "X");
     const player2 = Player("Player 2", "O");
 
+    /* 
+    add click event to the squares
+    the event do nothing when there's a winner
+    otherwise players add mark to the square (depend on the turn)
+    ends the game when somebody wins, or draw
+    otherwise, show whose move next
+    */
     display.getSquareGrids().forEach(
         function(node, index) {
             node.addEventListener('click', function() {
@@ -162,6 +181,7 @@ function Game() {
         }
     );
 
+    /* adds live update on the text input for changing player name */ 
     display.getInput(1).addEventListener('input', function() {
         changeName(player1, this);
     })
@@ -169,6 +189,7 @@ function Game() {
         changeName(player2, this);
     })
 
+    /* changes the player name */
     function changeName(player, node) {
         player.setName(node.value);
         if (gameboard.checkWinner() === null) {
@@ -176,6 +197,7 @@ function Game() {
         }
     }
 
+    /* display whose turn next */
     const turnIndicator = () => {
         if (gameboard.getTurn() % 2 === 0) {
             display.getFooter().textContent = player1.getName() + "'s turn";
@@ -184,6 +206,11 @@ function Game() {
         }
     }
 
+    /*
+    Start the game, also called when player restarts the game
+    Advance 1 turn beforehand if 2nd player want to start first
+    Clear up state-changing css classes
+    */
     const start = (firstturn) => {
         gameboard.reset();
         if (firstturn === 1) { gameboard.advanceTurn()}
@@ -199,6 +226,10 @@ function Game() {
         turnIndicator();
     }
 
+    /* 
+    Display winner at the bottom
+    then allows restart
+    */
     const end = () => {
         let winner = gameboard.checkWinner();
         if (winner === 'draw') {
@@ -213,6 +244,10 @@ function Game() {
         showRestart();    
     }
 
+    /*
+    shows restart button
+    each buttons represent the player who start first in the next game
+    */
     const showRestart = () => {
         const restartdiv = document.createElement('p');
         restartdiv.textContent = "REPLAY?"
